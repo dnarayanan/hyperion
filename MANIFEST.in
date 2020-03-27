@@ -1,12 +1,10 @@
-include configure Makefile.in src/modules/empty.txt bin/empty.txt LICENSE
-include CMakeLists.txt
-exclude scripts/mctherm2hyperion
+include README.md
 
-recursive-include cmake_modules *
+include configure Makefile.in src/modules/empty.txt bin/empty.txt LICENSE
+exclude scripts/mctherm2hyperion
 
 recursive-include src *.f90
 recursive-include fortranlib *.f90
-recursive-include deps *
 recursive-include docs *
 recursive-include hyperion *.hh *.cc
 

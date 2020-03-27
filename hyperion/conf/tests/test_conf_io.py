@@ -5,7 +5,7 @@ from __future__ import print_function, division
 from itertools import product
 
 from numpy.testing import assert_equal
-from astropy.tests.helper import pytest
+import pytest
 
 from .. import OutputConf, RunConf, ImageConf, BinnedImageConf, PeeledImageConf
 from ...util.functions import virtual_file
@@ -28,7 +28,8 @@ def test_io_image_conf():
     i1 = ImageConf()
     i1.set_image_size(33, 42)
     i1.set_image_limits(3.2, 4.4, 5.2, 9.9)
-    i1.set_aperture_range(6, 1.2, 8.8)  # deliberately old API
+    with pytest.warns(DeprecationWarning, match='renamed to set_aperture_radii'):
+        i1.set_aperture_range(6, 1.2, 8.8)  # deliberately old API
     i1.set_wavelength_range(9, 2.2, 7.4)
     i1.set_output_bytes(4)
     i1.set_track_origin('basic')

@@ -2,18 +2,12 @@
 Installation
 ============
 
-.. important:: This section contains information on setting up the dependencies for
-          Hyperion as well as Hyperion itself. If you have any issues with the
-          installation of any of the dependencies or Hyperion, please first
-          talk to your system administrator to see if they can help you get
-          set up!
-
 The easy way
 ============
 
 The easiest way to install Hyperion and all the dependencies on MacOS X or Linux
-is to use the `Anaconda Python Distribution <https://www.continuum.io/downloads>`_
-or `Miniconda <http://conda.pydata.org/miniconda.html>`_. Once you have either
+is to use the `Anaconda Distribution <https://www.anaconda.com/download/>`_
+or `Miniconda <https://conda.io/miniconda.html>`_. Once you have either
 of these set up, you can install Hyperion by simply doing::
 
     conda install -c conda-forge hyperion
@@ -29,34 +23,68 @@ not return 'command not found'::
     $ hyperion_car
     Usage: hyperion_car [-f] input_file output_file
 
-If you see the same as the above, you are all set!
+If you see the same as the above, you are all set! If you run into any issues,
+please let us know by `opening an issue
+<https://github.com/hyperion-rt/hyperion/issues>`_.
 
 The longer way
 ==============
 
-Dependencies
-------------
+Fortran dependencies
+--------------------
 
-First, you will need to install several dependencies for the Fortran and Python
-versions of Hyperion. Choose your own adventure!
+The packages required for the Fortran part of Hyperion are:
 
-.. toctree::
-   :maxdepth: 1
+* A Fortran compiler. The following compilers are known to work:
 
-   install_debian_ubuntu.rst
-   install_fedora.rst
-   install_centos_scilinux.rst
-   install_linux_nonroot.rst
-   install_macosx.rst
-   install_full.rst
+  * gfortran 4.3 and later
+  * ifort 11 and later
+  * pgfortran 11 and above
+
+* `HDF5 <http://www.hdfgroup.org/HDF5/>`_ 1.8.x or 1.10.x with the Fortran bindings
+
+* An MPI installation (e.g. `MPICH2 <http://www.mpich.org/>`_ or `OpenMPI
+  <http://www.open-mpi.org/>`_) with the Fortran bindings
+
+Note that in some cases, default installations of HDF5 and MPI packages do not
+include support for Fortran - this has to be explicitly enabled.
+
+Due to the variety of operating system versions and Linux distributions, we
+can't provide detailed instructions for each one, so if you need help with
+installing these dependencies, consider getting help from your local friendly
+system administrator.
+
+There are nevertheless a couple of simple cases. First, on Debian-based Linux
+distributions (including Ubuntu), you should be able to install these
+dependencies with::
+
+    apt-get install libmpich2-dev libhdf5-serial-dev
+
+On Fedora Linux distributions, you should be able to install these
+dependencies with::
+
+    yum install hdf5-static mpich-devel libgfortran-static
+
+Python dependencies
+-------------------
+
+The packages required for the Python code (in addition to Python itself) are:
+
+* `NumPy <http://www.numpy.org>`_ 1.11 or later
+* `Matplotlib <http://matplotlib.org>`_ 1.5 or later
+* `h5py <http://www.h5py.org>`_ 2.4 or later
+* `Astropy <http://www.astropy.org>`_ 1.2 or later
+* `yt <http://yt-project.org/>`_ 3.3 or later
+
+These dependencies will be automatically installed when installing the Python
+component of Hyperion if they are not already present.
 
 .. _hyperion_install:
 
 Hyperion
 --------
 
-Once you have installed the dependencies as described in one of the sections
-above, you are ready to install Hyperion!
+Once you have installed the dependencies, you are ready to install Hyperion!
 
 Download the latest tar file from `here <https://pypi.python.org/pypi/Hyperion/>`_, then expand it with::
 
@@ -64,15 +92,15 @@ Download the latest tar file from `here <https://pypi.python.org/pypi/Hyperion/>
     cd Hyperion-x.x.x
 
 Python module
--------------
+^^^^^^^^^^^^^
 
 Install the Python module with::
 
-    python setup.py install
+    pip install .
 
 or::
 
-    python setup.py install --user
+    pip install . --user
 
 if you do not have root access. Check that the module installed correctly::
 
@@ -97,7 +125,6 @@ should contain something like this::
 The path listed (excluding ``hyperion`` at the end) should be in your
 ``$PATH``. On Linux systems, this path will often be ``$HOME/.local/bin``.
 
-
 .. note:: On recent versions of MacOS X, you may encounter the following error
           when trying to install the Python library for Hyperion::
 
@@ -111,11 +138,17 @@ The path listed (excluding ``hyperion`` at the end) should be in your
 
 
 Fortran binaries
-----------------
+^^^^^^^^^^^^^^^^
 
-Compile the Fortran code with::
+If you are using HDF5 1.10.x, compile the Fortran code with::
 
     ./configure
+    make
+    make install
+
+If you are using HDF5 1.8.x, compile the Fortran code with::
+
+    HYPERION_HDF5_VERSION=18 ./configure
     make
     make install
 
@@ -138,10 +171,3 @@ If you get::
 
 then something went wrong in the installation, or the directory to which you
 installed the binaries is not in your ``$PATH``. Otherwise, you are all set!
-
-CMake build system
-^^^^^^^^^^^^^^^^^^
-
-An experimental build system for the Fortran binaries based on CMake is now
-available. You can find the detailed instructions on how to use it at the page
-:doc:`cmake_build_system`.
